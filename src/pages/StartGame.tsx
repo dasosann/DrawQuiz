@@ -3,8 +3,8 @@ import S from '../css/StartGame';
 
 const StartGame: React.FC = () => {
   const [isStartButtonVisible, setIsStartButtonVisible] = useState<boolean>(true);
-  const [isClosing, setIsClosing] = useState<boolean>(false);
-  const [isOpening, setIsOpening] = useState<boolean>(false); // "게임 시작" 버튼 나타날 때 애니메이션용 상태
+  const [isClosing, setIsClosing] = useState<boolean>(false);  // "게임 시작 버튼 사라질때 애니메이션 용 상태"
+  const [isOpening, setIsOpening] = useState<boolean>(false); // "게임 시작" 버튼 나타날 때 애니메이션용 상태"
   const [isThemeClosing, setIsThemeClosing] = useState<boolean>(false); // 테마 선택 화면 사라질 때 애니메이션용 상태
 
   const themes: string[] = [
