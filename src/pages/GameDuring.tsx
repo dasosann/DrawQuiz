@@ -1,7 +1,7 @@
 // src/pages/GameDuring.tsx
 import React, { useState, useEffect } from 'react';
 import G from '../css/GameDuring.ts';
-
+import S from '../css/StartGame.ts';
 interface GameDuringProps {
   theme: string;
 }
@@ -58,7 +58,7 @@ const themeData: Record<string, { boss: { name: string; image: string }; quizzes
 };
 
 const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
-  const { boss, quizzes } = themeData[theme] || { boss: { name: 'Unknown', image: '' }, quizzes: [] };
+  const { boss, quizzes } = themeData[theme];
   const [randomQuiz, setRandomQuiz] = useState<Quiz | null>(null);
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);

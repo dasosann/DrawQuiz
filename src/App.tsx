@@ -1,17 +1,24 @@
-  // src/App.tsx
-  import React, { useState } from 'react';
-  import StartGame from './pages/StartGame';
-  import './App.css';
+import React, { useState } from 'react';
+import StartGame from './pages/StartGame';
+import GameDuring from './pages/GameDuring';
+import './App.css';
 
-  const App: React.FC = () => {
-    const [screen, setScreen] = useState<'start' | 'game' | 'result'>('start');
-    
+const App: React.FC = () => {
+  const [screen, setScreen] = useState<'start' | 'game' | 'result'>('start');
+  const [theme, setTheme] = useState<string>('');
 
-    return (
-      <div>
-        {screen === 'start' && <StartGame/>}
-      </div>
-    );
+  // StartGame에서 테마 선택 및 화면 전환 처리
+  const handleThemeSelect = (selectedTheme: string) => {
+    setTheme(selectedTheme);
+    setScreen('game');
   };
 
-  export default App;
+  return (
+    <div>
+      {screen === 'start' && <StartGame onThemeSelect={handleThemeSelect} />}
+      {screen === 'game' && <GameDuring theme={theme} />}
+    </div>
+  );
+};
+
+export default App;

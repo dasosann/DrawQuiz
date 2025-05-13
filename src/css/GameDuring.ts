@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 interface ResultMessageProps {
   isCorrect: boolean;
+  children: React.ReactNode; // 자식 콘텐츠를 위한 prop
 }
 
 interface StyledComponents {
