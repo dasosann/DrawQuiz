@@ -14,7 +14,7 @@ interface Quiz {
 // 테마별 보스와 퀴즈 데이터 (50개 질문 예시)
 const themeData: Record<string, { boss: { name: string; image: string }; quizzes: Quiz[] }> = {
   프론트엔드: {
-    boss: { name: 'React 마스터', image: '/assets/img/boss-frontend.png' },
+    boss: { name: 'React 마스터', image: '/assets/gameItems/frontend_boss.png' },
     quizzes: [
       { question: 'React에서 상태를 관리하는 Hook은?', answer: 'useState' },
       { question: 'JSX의 풀네임은?', answer: 'JavaScript XML' },
@@ -28,7 +28,7 @@ const themeData: Record<string, { boss: { name: string; image: string }; quizzes
     ],
   },
   백엔드: {
-    boss: { name: 'Node.js 거인', image: '/assets/img/boss-backend.png' },
+    boss: { name: 'Node.js 거인', image: '/assets/gameItems/backend_boss.png' },
     quizzes: [
       { question: 'REST API의 약자는?', answer: 'Representational State Transfer' },
       { question: 'Express.js에서 미들웨어의 역할은?', answer: '요청 처리' },
