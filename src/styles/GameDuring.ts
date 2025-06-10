@@ -5,6 +5,13 @@ interface ResultMessageProps {
   isCorrect: boolean;
   children: React.ReactNode; // 자식 콘텐츠를 위한 prop
 }
+interface EvaluationMessageProps {
+  evaluation: 'Excellent' | 'Great' | 'Good' | 'Bad';
+  children: React.ReactNode; // 자식 콘텐츠 추가
+}
+interface HealthBarProps {
+  health: number; // 체력 비율 (0~100)
+}
 
 interface StyledComponents {
   Content: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
@@ -14,6 +21,9 @@ interface StyledComponents {
   AnswerInput: React.ComponentType<React.InputHTMLAttributes<HTMLInputElement>>;
   SubmitButton: React.ComponentType<React.ButtonHTMLAttributes<HTMLButtonElement>>;
   ResultMessage: React.ComponentType<ResultMessageProps>;
+  EvaluationMessage :React.ComponentType<EvaluationMessageProps>;
+  HealthBar: React.ComponentType<HealthBarProps>;
+  Timer: React.ComponentType<React.HTMLAttributes<HTMLSpanElement>>;
 }
 
 const G: StyledComponents = {
@@ -21,11 +31,10 @@ const G: StyledComponents = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    //justify-content: center;
     height: 100%;
     color: #ffffff;
     text-align: center;
-    font-family: var(--font-family-base);
   `,
 
   BossImage: styled.img`
@@ -74,6 +83,41 @@ const G: StyledComponents = {
     font-size: clamp(1rem, 3.5vw, 1.2rem);
     color: ${props => (props.isCorrect ? '#28a745' : '#dc3545')};
     margin: 10px 0;
+  `,
+  EvaluationMessage: styled.p<EvaluationMessageProps>`
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    color: ${props =>
+      props.evaluation === 'Excellent'
+        ? '#ffd700'
+        : props.evaluation === 'Great'
+        ? '#40c4ff'
+        : props.evaluation === 'Good'
+        ? '#ff9800'
+        : '#666666'};
+    margin: 10px 0;
+  `,
+  HealthBar: styled.div<HealthBarProps>`
+    /* position: absolute;
+    top: -20px; */
+    width: clamp(150px, 40vw, 200px);
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      display: block;
+      width: ${props => props.health}%;
+      height: 100%;
+      background-color:rgb(218, 10, 10);
+      transition: width 0.3s ease;
+    }
+  `,
+  Timer: styled.span`
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    color: #ff4444;
+    margin-left: 10px;
   `,
 };
 

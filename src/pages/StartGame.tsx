@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import S from '../css/StartGame';
+import S from '../styles/StartGame';
 
 interface StartGameProps {
   onThemeSelect: (theme: string) => void;

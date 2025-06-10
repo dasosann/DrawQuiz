@@ -1,7 +1,8 @@
 // src/pages/GameDuring.tsx
-import React, { useState, useEffect } from 'react';
-import G from '../css/GameDuring.ts';
-import S from '../css/StartGame.ts';
+import React, { useState, useEffect, useRef } from 'react';
+import S from '../styles/StartGame'; // 경로 수정
+import G from '../styles/GameDuring';
+
 interface GameDuringProps {
   theme: string;
 }
@@ -11,42 +12,41 @@ interface Quiz {
   answer: string;
 }
 
-// 테마별 보스와 퀴즈 데이터 (50개 질문 예시)
 const themeData: Record<string, { boss: { name: string; image: string }; quizzes: Quiz[] }> = {
   프론트엔드: {
     boss: { name: 'React 마스터', image: '/assets/gameItems/frontend_boss.png' },
     quizzes: [
-      { question: 'React에서 상태를 관리하는 Hook은?', answer: 'useState' },
-      { question: 'JSX의 풀네임은?', answer: 'JavaScript XML' },
-      { question: '컴포넌트 생명주기를 관리하는 Hook은?', answer: 'useEffect' },
-      { question: 'Virtual DOM의 주요 장점은?', answer: '성능 최적화' },
-      { question: 'React의 단방향 데이터 흐름의 방향은?', answer: '부모에서 자식' },
-      { question: 'React에서 함수 컴포넌트를 정의하는 키워드는?', answer: 'function' },
-      { question: 'Props를 전달하는 주요 방법은?', answer: '속성' },
-      { question: 'useRef Hook의 주요 용도는?', answer: '참조 유지' },
-      { question: 'React에서 조건부 렌더링에 자주 쓰이는 연산자는?', answer: '&&' },
-      { question: 'React의 기본 패키지 이름은?', answer: 'react' },
-      { question: 'DOM을 조작하기 위한 Hook은?', answer: 'useRef' },
-      { question: 'React에서 이벤트 핸들러를 정의하는 속성은?', answer: 'onClick' },
-      { question: 'CSS-in-JS 라이브러리 중 하나는?', answer: 'styled-components' },
-      { question: 'React에서 라우팅을 위해 주로 사용하는 라이브러리는?', answer: 'react-router' },
-      { question: '상태 관리 라이브러리 중 하나는?', answer: 'Redux' },
-      { question: 'React에서 키 prop의 주요 용도는?', answer: '목록 렌더링' },
-      { question: 'React의 기본 렌더링 메서드는?', answer: 'render' },
-      { question: 'React에서 비제어 컴포넌트를 다룰 때 사용하는 속성은?', answer: 'ref' },
-      { question: 'React에서 메모이제이션을 위한 Hook은?', answer: 'useMemo' },
-      { question: '콜백 함수를 메모이제이션하는 Hook은?', answer: 'useCallback' },
-      { question: 'React에서 전역 상태를 관리하는 Hook은?', answer: 'useContext' },
-      { question: 'React의 기본 export 방식은?', answer: 'default' },
-      { question: 'React에서 클래스 컴포넌트의 상태를 설정하는 메서드는?', answer: 'setState' },
-      { question: 'React에서 컴포넌트 이름을 지정할 때의 규칙은?', answer: '대문자' },
-      { question: 'React에서 기본적으로 사용하는 패키지 매니저는?', answer: 'npm' },
-      { question: 'React 프로젝트를 빠르게 시작하는 도구는?', answer: 'create-react-app' },
-      { question: 'React에서 타입을 정의하는 데 자주 사용하는 언어는?', answer: 'TypeScript' },
-      { question: 'React에서 성능 최적화를 위한 도구는?', answer: 'React DevTools' },
-      { question: 'React에서 기본적으로 사용하는 테스트 라이브러리는?', answer: 'Jest' },
-      { question: 'React에서 컴포넌트 간 데이터 전달을 위한 패턴은?', answer: 'props drilling' },
-    ],
+    { question: 'React 함수형 컴포넌트에서 상태(state)를 관리하기 위해 사용하는 Hook은?', answer: 'useState' },
+    { question: 'JSX란 무엇이며, 왜 React에서 사용하는가?', answer: 'JSX' },
+    { question: '컴포넌트가 마운트·업데이트될 때 부수 효과(side effect)를 처리하기 위해 사용하는 Hook은?', answer: 'useEffect' },
+    { question: 'React가 빠르게 화면을 업데이트할 수 있게 해 주는 기술은?', answer: 'Virtual DOM' },
+    { question: 'React에서 데이터는 어떤 방향으로 흐르는가?', answer: '부모에서 자식' },
+    { question: 'React 컴포넌트를 정의할 때 사용하는 JavaScript 키워드는?', answer: 'function' },
+    { question: '부모 컴포넌트가 자식 컴포넌트에 데이터를 전달할 때 사용하는 속성은?', answer: 'props' },
+    { question: 'DOM 요소에 직접 접근하거나 값을 기억하기 위해 사용하는 Hook은?', answer: 'useRef' },
+    { question: '조건부 렌더링을 위해 자주 사용하는 JavaScript 논리 연산자는?', answer: '&&' },
+    { question: 'React 패키지를 프로젝트에 설치할 때 사용하는 npm 패키지 이름은?', answer: 'react' },
+    { question: '버튼 클릭 이벤트를 처리하기 위해 JSX에서 사용하는 속성은?', answer: 'onClick' },
+    { question: 'CSS-in-JS 방식으로 스타일링할 때 많이 쓰이는 라이브러리는?', answer: 'styled-components' },
+    { question: 'SPA에서 페이지 이동을 관리하기 위해 사용하는 라이브러리는?', answer: 'react-router' },
+    { question: '전역 상태 관리를 위해 주로 사용하는 라이브러리는?', answer: 'Redux' },
+    { question: '리스트를 렌더링할 때 각 항목을 구분하기 위해 설정해야 하는 속성은?', answer: 'key' },
+    { question: 'React 애플리케이션을 실제 DOM에 렌더링할 때 호출하는 함수는?', answer: 'render' },
+    { question: '제어되지 않는 폼 입력(uncontrolled component)을 다룰 때 사용하는 속성은?', answer: 'ref' },
+    { question: '비용이 큰 계산을 메모이제이션하기 위해 사용하는 Hook은?', answer: 'useMemo' },
+    { question: '함수를 메모이제이션하여 불필요한 재생성을 방지하는 Hook은?', answer: 'useCallback' },
+    { question: 'Context API를 통해 전역 데이터를 공유하기 위해 사용하는 Hook은?', answer: 'useContext' },
+    { question: '모듈을 기본 내보내기할 때 사용하는 키워드는?', answer: 'default' },
+    { question: '클래스형 컴포넌트에서 상태를 업데이트하기 위해 호출하는 메서드는?', answer: 'setState' },
+    { question: 'React 컴포넌트 이름은 어떤 규칙으로 시작해야 하는가?', answer: '대문자' },
+    { question: 'React 프로젝트를 생성 및 설치할 때 사용하는 패키지 관리 도구는?', answer: 'npm' },
+    { question: 'CRA(create-react-app)로 새 앱을 초기화할 때 쓰는 명령어는?', answer: 'create-react-app' },
+    { question: '타입 안전성을 위해 React에서 자주 사용하는 언어는?', answer: 'TypeScript' },
+    { question: 'React 성능을 모니터링하고 디버깅하기 위해 사용하는 브라우저 확장 도구는?', answer: 'React DevTools' },
+    { question: '컴포넌트 테스트를 위해 주로 사용하는 테스팅 프레임워크는?', answer: 'Jest' },
+    { question: '여러 단계의 자식 컴포넌트에 props를 계속 전달해야 할 때 발생하는 문제를 지칭하는 용어는?', answer: 'props drilling' },
+    { question: 'React 애플리케이션에서 기본적으로 사용하는 프로그래밍 언어는?', answer: 'JavaScript' }
+  ],
   },
   백엔드: {
     boss: { name: 'Node.js 거인', image: '/assets/gameItems/backend_boss.png' },
@@ -77,14 +77,14 @@ const themeData: Record<string, { boss: { name: string; image: string }; quizzes
       { question: '백엔드에서 로깅을 위해 자주 사용하는 라이브러리는?', answer: 'winston' },
       { question: 'Node.js에서 비동기 함수를 선언하는 키워드는?', answer: 'async' },
       { question: 'REST API에서 PUT 메서드의 용도는?', answer: '데이터 업데이트' },
-      { question: '백엔드에서 데이터베이스 연결을 관리하는 도구는?', answer: 'ORM' },
+      { question: '백엔드에서 데이터베이스 연결을 가진 도구는?', answer: 'ORM' },
       { question: 'Node.js에서 패키지를 관리하는 기본 도구는?', answer: 'npm' },
       { question: 'HTTP 상태 코드 500은 무엇을 의미하나?', answer: '서버 오류' },
       { question: '백엔드에서 API 문서를 생성하는 도구는?', answer: 'Swagger' },
     ],
   },
   인공지능: {
-    boss: { name: 'AI 오라클', image: '/assets/img/boss-ai.png' },
+    boss: { name: 'AI 오라클', image: '/assets/ai_boss.jpg' },
     quizzes: [
       { question: '딥러닝의 핵심 기술은?', answer: '신경망' },
       { question: 'Gradient Descent의 목적은?', answer: '손실 최소화' },
@@ -103,43 +103,184 @@ const themeData: Record<string, { boss: { name: string; image: string }; quizzes
 };
 
 const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
-  const { boss, quizzes } = themeData[theme];
-  const [randomQuiz, setRandomQuiz] = useState<Quiz | null>(null);
+  const { boss, quizzes } = themeData[theme] || { boss: { name: 'Unknown', image: '' }, quizzes: [] };
+  const [shuffledQuizzes, setShuffledQuizzes] = useState<Quiz[]>([]);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState<number>(0);
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [secondsLeft, setSecondsLeft] = useState<number>(10);
+  const [evaluation, setEvaluation] = useState<'Excellent' | 'Great' | 'Good' | 'Bad' | null>(null);
+  const [bossHealth, setBossHealth] = useState<number>(100);
+  const timerRef = useRef<number | null>(null);
+  const intervalRef = useRef<number | null>(null);
+
+  const normalize = (str: string) =>
+    str.trim().replace(/[-\s]/g, '').toLowerCase();
+
+  const shuffleArray = (array: Quiz[]): Quiz[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
   useEffect(() => {
     if (quizzes.length > 0) {
-      const randomIndex = Math.floor(Math.random() * quizzes.length);
-      setRandomQuiz(quizzes[randomIndex]);
+      const shuffled = shuffleArray(quizzes);
+      setShuffledQuizzes(shuffled);
+      setCurrentQuizIndex(0);
+      setSecondsLeft(10);
+      setBossHealth(100);
     }
   }, [quizzes]);
 
+  useEffect(() => {
+    setSecondsLeft(10);
+    setEvaluation(null);
+    setIsCorrect(null);
+    setUserAnswer('');
+
+    intervalRef.current = window.setInterval(() => {
+      setSecondsLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(intervalRef.current!);
+          if (!isSubmitting) {
+            setIsSubmitting(true);
+            setIsCorrect(false);
+            setEvaluation('Bad');
+
+            if (timerRef.current) {
+              clearTimeout(timerRef.current);
+            }
+
+            timerRef.current = setTimeout(() => {
+              const nextIndex = currentQuizIndex + 1;
+              console.log("nextIndex길이", nextIndex , "쩐체질문길이", shuffledQuizzes.length);
+              if (nextIndex < shuffledQuizzes.length) {
+                setCurrentQuizIndex(nextIndex);
+              } else {
+                alert('질문 모두 소진했습니다.');
+              }
+              setUserAnswer('');
+              setIsCorrect(null);
+              setEvaluation(null);
+              setIsSubmitting(false);
+            }, 3000);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [currentQuizIndex]);
+
   const handleSubmit = () => {
-    if (randomQuiz && userAnswer.trim().toLowerCase() === randomQuiz.answer.toLowerCase()) {
-      setIsCorrect(true);
+    if (isSubmitting || !shuffledQuizzes[currentQuizIndex]) return;
+
+    setIsSubmitting(true);
+    const correctAnswer = shuffledQuizzes[currentQuizIndex].answer;
+    const isAnswerCorrect = normalize(userAnswer) === normalize(correctAnswer);
+    setIsCorrect(isAnswerCorrect);
+
+    if (isAnswerCorrect) {
+      const elapsedTime = 10 - secondsLeft;
+      let damage = 0;
+      if (elapsedTime <= 2) {
+        setEvaluation('Excellent');
+        damage=15;
+      } else if (elapsedTime <= 5) {
+        setEvaluation('Great');
+        damage=10;
+      } else if (elapsedTime <= 10) {
+        setEvaluation('Good');
+        damage=5;
+      }
+
+      setBossHealth(prev => {
+        const newHealth = Math.max(0, prev - damage);
+        if (newHealth === 0) {
+          alert('보스를 물리쳤습니다! 게임 종료!');
+        }
+        return newHealth;
+      });
     } else {
-      setIsCorrect(false);
+      setEvaluation(null);
     }
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      const nextIndex = currentQuizIndex + 1;
+      if (nextIndex < shuffledQuizzes.length && bossHealth > 0) {
+        setCurrentQuizIndex(nextIndex);
+      } else if (bossHealth > 0) {
+        alert('질문 모두 소진했습니다.');
+      }
+      setUserAnswer('');
+      setIsCorrect(null);
+      setEvaluation(null);
+      setIsSubmitting(false);
+    }, 3000);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  const currentQuiz = shuffledQuizzes[currentQuizIndex];
 
   return (
     <S.BackGroundDiv>
       <G.Content>
-        <G.BossImage src={boss.image} alt={boss.name} />
-        <G.BossName>{boss.name}</G.BossName>
-        <G.Question>{randomQuiz ? randomQuiz.question : '질문이 없습니다.'}</G.Question>
+        <div style={{ position: 'relative' }}>
+          <G.HealthBar health={bossHealth} />
+          <G.BossImage src={boss.image} alt={boss.name} />
+        </div>
+        <G.Question>
+          {currentQuiz ? currentQuiz.question : '질문이 없습니다.'}
+          <G.Timer>{secondsLeft}</G.Timer>
+        </G.Question>
         <G.AnswerInput
           type="text"
           value={userAnswer}
-          onChange={(e) => setUserAnswer(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
           placeholder="답변을 입력하세요"
+          disabled={isSubmitting}
         />
-        <G.SubmitButton onClick={handleSubmit}>제출</G.SubmitButton>
+        <G.SubmitButton onClick={handleSubmit} disabled={isSubmitting}>
+          제출
+        </G.SubmitButton>
         {isCorrect !== null && (
           <G.ResultMessage isCorrect={isCorrect}>
             {isCorrect ? '정답입니다!' : '오답입니다.'}
           </G.ResultMessage>
+        )}
+        {evaluation && (
+          <G.EvaluationMessage evaluation={evaluation}>
+            {evaluation}
+          </G.EvaluationMessage>
         )}
       </G.Content>
     </S.BackGroundDiv>
