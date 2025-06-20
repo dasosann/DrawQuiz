@@ -138,11 +138,16 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
   }, [quizzes]);
 
   useEffect(() => {
+    // 퀴즈가 준비되지 않았으면 타이머 로직을 실행하지 않음
+    if (shuffledQuizzes.length === 0) return;
+
+    // 각 퀴즈 시작 시 초기화
     setSecondsLeft(10);
     setEvaluation(null);
     setIsCorrect(null);
     setUserAnswer('');
 
+    // 1초마다 카운트다운
     intervalRef.current = window.setInterval(() => {
       setSecondsLeft(prev => {
         if (prev <= 1) {
@@ -152,13 +157,14 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
             setIsCorrect(false);
             setEvaluation('Bad');
 
+            // 이전 타이머 정리
             if (timerRef.current) {
               clearTimeout(timerRef.current);
             }
 
-            timerRef.current = setTimeout(() => {
+            // 3초 뒤 다음 질문으로 이동
+            timerRef.current = window.setTimeout(() => {
               const nextIndex = currentQuizIndex + 1;
-              console.log("nextIndex길이", nextIndex , "쩐체질문길이", shuffledQuizzes.length);
               if (nextIndex < shuffledQuizzes.length) {
                 setCurrentQuizIndex(nextIndex);
               } else {
@@ -177,11 +183,11 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
     }, 1000);
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      clearInterval(intervalRef.current!);
+      clearTimeout(timerRef.current!);
     };
-  }, [currentQuizIndex]);
+  }, [currentQuizIndex, shuffledQuizzes.length]);
+
 
   const handleSubmit = () => {
     if (isSubmitting || !shuffledQuizzes[currentQuizIndex]) return;
@@ -229,7 +235,7 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme }) => {
       if (nextIndex < shuffledQuizzes.length && bossHealth > 0) {
         setCurrentQuizIndex(nextIndex);
       } else if (bossHealth > 0) {
-        alert('질문 모두 소진했습니다.');
+        alert('보스 공략 실패');
       }
       setUserAnswer('');
       setIsCorrect(null);
