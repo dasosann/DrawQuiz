@@ -16,7 +16,7 @@ const App: React.FC = () => {
   return (
     <div>
       {screen === 'start' && <StartGame onThemeSelect={handleThemeSelect} />}
-      {screen === 'game' && <GameDuring theme={theme} />}
+      {screen === 'game' && <GameDuring theme={theme} onExit={()=>setScreen('start')} />}
     </div>
   );
 };

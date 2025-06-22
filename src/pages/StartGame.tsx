@@ -42,7 +42,7 @@ const StartGame: React.FC<StartGameProps> = ({ onThemeSelect }) => {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [isStartButtonVisible]);
-
+  
   return (
     <S.BackGroundDiv>
       <S.NeonText>DrawQuiz</S.NeonText>

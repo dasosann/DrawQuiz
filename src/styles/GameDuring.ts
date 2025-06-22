@@ -24,6 +24,9 @@ interface StyledComponents {
   EvaluationMessage :React.ComponentType<EvaluationMessageProps>;
   HealthBar: React.ComponentType<HealthBarProps>;
   Timer: React.ComponentType<React.HTMLAttributes<HTMLSpanElement>>;
+  ModalOverlay: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  ModalContainer: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  ModalButton: React.ComponentType<React.ButtonHTMLAttributes<HTMLButtonElement>>;
 }
 
 const G: StyledComponents = {
@@ -118,6 +121,51 @@ const G: StyledComponents = {
     font-size: clamp(1rem, 3.5vw, 1.2rem);
     color: #ff4444;
     margin-left: 10px;
+  `,
+   ModalOverlay: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  `,
+
+  // 모달 컨테이너
+  ModalContainer: styled.div`
+    background: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    width: clamp(280px, 80vw, 360px);
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  `,
+
+  // 모달 버튼
+  ModalButton: styled.button`
+    margin: 0 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &.confirm {
+      background-color: #007bff;
+      color: #fff;
+    }
+    &.cancel {
+      background-color: #ccc;
+      color: #333;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
   `,
 };
 
