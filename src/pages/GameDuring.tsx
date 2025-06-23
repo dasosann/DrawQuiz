@@ -125,13 +125,33 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme, onExit }) => {
   const intervalRef = useRef<number | null>(null);
 
   const normalize = (str: string) => str.trim().replace(/[-\s]/g, '').toLowerCase();
-
+  const shuffleArray = (array: Quiz[]): Quiz[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+   useEffect(() => {
+    if (quizzes.length > 0) {
+      const shuffled = shuffleArray(quizzes);
+      setShuffledQuizzes(shuffled);
+      setCurrentQuizIndex(0);
+      setSecondsLeft(10);
+      setBossHealth(100);
+    }
+  }, [quizzes]);
   // 퀴즈 섞기 및 초기 세팅
   useEffect(() => {
   if (!shuffledQuizzes.length) return;   // 퀴즈가 준비되지 않았다면 무시
   setSecondsLeft(10);                    // 매 문제마다 10초로 초기화
   clearInterval(intervalRef.current!);
   clearTimeout(timerRef.current!);
+  setIsCorrect(null);        // 정답/오답 메시지 숨기기
+  setEvaluation(null);       // 평가 메시지 숨기기
+  setUserAnswer('');   
+  setEvaluation(null);
   resumeTimer();                         //남은 시간(=10초)부터 countdown 시작
 }, [currentQuizIndex, shuffledQuizzes.length]);
 
@@ -148,8 +168,11 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme, onExit }) => {
           setEvaluation('Bad');
           timerRef.current = window.setTimeout(() => {
             const next = currentQuizIndex + 1;
-            if (next < shuffledQuizzes.length) setCurrentQuizIndex(next);
-            else alert('질문 모두 소진했습니다.');
+            if (next < shuffledQuizzes.length) {
+              setCurrentQuizIndex(next);
+              setIsSubmitting(false);
+            }
+            else alert('보스 공략 실패!');
           }, 3000);
           return 0;
         }
@@ -199,7 +222,10 @@ const GameDuring: React.FC<GameDuringProps> = ({ theme, onExit }) => {
 
     timerRef.current = window.setTimeout(() => {
       const next = currentQuizIndex + 1;
-      if (next < shuffledQuizzes.length && bossHealth > 0) setCurrentQuizIndex(next);
+      if (next < shuffledQuizzes.length && bossHealth > 0) {
+        setCurrentQuizIndex(next);
+        setIsSubmitting(false);
+      }
       else if (bossHealth > 0) alert('보스 공략 실패');
     }, 3000);
   };
