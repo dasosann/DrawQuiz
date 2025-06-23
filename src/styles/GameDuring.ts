@@ -55,6 +55,8 @@ const G: StyledComponents = {
   Question: styled.p`
     font-size: clamp(1rem, 3.5vw, 1.2rem);
     margin: 10px 0;
+    word-break: keep-all;
+    white-space: pre-wrap;
   `,
 
   AnswerInput: styled.input`
